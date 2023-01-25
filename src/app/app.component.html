@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <!-- in this form tag their is no method or action because this form will not submit to a server  -->
+       <!-- local Reference #f: to acces this form 
+      ngForm tell angular give me the access that form you created automatically-->
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div id="user-data" ngModelGroup="userData"
+        #userData="ngModelGroup"
+        >
+          <!-- userData: keyname for this group, this userData will be an object of this two fields -->
+          <!--  #userData="ngModelGroup": to get access javascript object  -->
+          <div class="form-group">
+            <label for="username">Username</label>
+            <!-- angular will not automatically detect input from this form -->
+            <input 
+            type="text" 
+            id="username" 
+            class="form-control"
+            ngModel
+            name="username"
+            required> 
+            <!-- required acts as a selector in angular directive -->
+            <!-- ngModel :tells the angular this input is control of my form 
+            ngModel makes this input's as JS representation means object
+            -->
+          </div>
+          <button class="btn btn-default" 
+          type="button"
+          (click)="suggestUserName()">Suggest an Username</button>
+          <div class="form-group">
+            <label for="email">Mail</label>
+            <input 
+            type="email" 
+            id="email" 
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            email
+            #email="ngModel">
+            <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
+            <!-- ngModel: additional information about control -->
+          </div>
+        </div>
+        <p *ngIf="!userData.valid && userData.touched">User Data invalid</p>
+        <div class="form-group">
+          <label for="secret">Secret Questions</label>
+          <select 
+          id="secret" 
+          class="form-control"
+          [ngModel] = "defaultQuestion"
+          name="secret">
+            <option value="pet">Your first Pet?</option>
+            <option value="teacher">Your first teacher?</option>
+          </select>
+        </div>
+        <!-- rows=3 size of the row -->
+        <div class="from-group">
+          <textarea
+          name="questionAnswer"
+          rows="3"
+          class="form-control"
+          [(ngModel)] ="answer"></textarea>
+        </div>
+        <p> Your reply: {{answer}} </p>
+        <div class="radio" *ngFor="let gender of genders">
+          <label>
+            <input type="radio"
+            name="gender"
+            ngModel
+            [value]="gender"
+            > {{ gender}}
+          </label>
+        </div>
+
+        <!-- this button  is not the right approch to submit the form, because it will try to 
+        directly send the data into the server but Angular is a SPA 
+        but this button can trigger JS event, we will take this advantage  -->
+        <button 
+        class="btn btn-primary" 
+        type="submit"
+        [disabled]="!f.valid">Submit</button>
+        <!-- if the value is unvalid the button will be disable -->
+      </form>
+    </div>
+  </div>
+  <hr>
+  <div class="row" *ngIf="submitted">
+    <div class="col-xs-12">
+      <h3>Your Data</h3>
+      <p>Username: {{ user.username }} </p>
+      <p>Mail: {{ user.email }} </p>
+      <p>Secret Qustion: Your first {{ user.secretQuestion}} </p>
+      <p>Answer: {{ user.answer}} </p>
+      <p>Gender: {{ user.gender}}</p>
+    </div>
+  </div>
+</div>
